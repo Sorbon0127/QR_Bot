@@ -12,11 +12,12 @@ services:
       - "8000:8000"
     networks:
       - qr_network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+    # ВАРИАНТ 1: временно выключить healthcheck
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 3
 
   telegram_bot:
     build:
@@ -28,8 +29,7 @@ services:
     environment:
       - USERS_SERVICE_URL=http://users_service:8000
     depends_on:
-      users_service:
-        condition: service_healthy
+      - users_service          # без условия service_healthy
     networks:
       - qr_network
     restart: unless-stopped
